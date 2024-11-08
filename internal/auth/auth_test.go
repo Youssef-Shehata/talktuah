@@ -1,12 +1,14 @@
 package auth
 
 import (
+	"crypto/rand"
 	"log"
+	"math"
+	"math/big"
 	"os"
 	"testing"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 )
 
@@ -39,11 +41,7 @@ func TestHashing2(t *testing.T) {
 }
 
 func TestJWT(t *testing.T) {
-
-    id ,err:=uuid.NewRandom()
-    if err !=nil {
-        log.Fatalf("why the fuck would a random genrator fail and return an error!!!!")
-    }
+    id := int64(100)
 
 	godotenv.Load()
   token, err := MakeJWT(id ,os.Getenv("SECRET") , int(time.Second*10) )

@@ -3,12 +3,13 @@ package auth
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
+
 	"github.com/pkg/errors"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -34,7 +35,7 @@ func CheckHashedPassword(password string, hashedPassword string) error {
 	return nil
 }
 
-func MakeJWT(userID uuid.UUID, tokenSecret string, expires_in int) (string, error) {
+func MakeJWT(userID int64, tokenSecret string, expires_in int) (string, error) {
 	expiresIn := time.Duration(expires_in) * time.Second
 	if expiresIn.Hours() == 0 || expiresIn.Hours() > 1 {
 		expiresIn = time.Hour
@@ -47,7 +48,7 @@ func MakeJWT(userID uuid.UUID, tokenSecret string, expires_in int) (string, erro
 		Issuer:    "twitter",
 		IssuedAt:  now,
 		ExpiresAt: expires,
-		Subject:   userID.String(),
+		Subject:   string(userID),
 	})
 	signedToken, err := token.SignedString([]byte(tokenSecret))
 
@@ -57,7 +58,7 @@ func MakeJWT(userID uuid.UUID, tokenSecret string, expires_in int) (string, erro
 
 	return signedToken, nil
 }
-func ValidateJWT(tokenString, tokenSecret string) (uuid.UUID, error) {
+func ValidateJWT(tokenString, tokenSecret string) (int64, error) {
 	claims := jwt.RegisteredClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, &claims, func(t *jwt.Token) (interface{}, error) {
@@ -65,19 +66,19 @@ func ValidateJWT(tokenString, tokenSecret string) (uuid.UUID, error) {
 	})
 
 	if err != nil {
-		return uuid.Nil, err
+		return 0, err
 	}
 
 	if !token.Valid {
-		return uuid.Nil, fmt.Errorf("invalid token")
+		return 0, fmt.Errorf("invalid token")
 	}
 
-	userID, err := uuid.Parse(claims.Subject)
+	userID, err := strconv.Atoi(claims.Subject)
 	if err != nil {
-		return uuid.Nil, fmt.Errorf("invalid subject UUID: %v", err)
+		return 0, fmt.Errorf("invalid subject id : %v", err)
 	}
 
-	return userID, nil
+	return int64(userID), nil
 
 }
 
