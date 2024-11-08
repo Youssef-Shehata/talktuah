@@ -1,0 +1,10 @@
+ [2024-11-08 20:07:57] ERROR : server listening
+ [2024-11-08 20:10:06] ERROR : server listening
+ [2024-11-08 20:11:07] ERROR : server listening
+ [2024-11-08 20:35:48] ERROR : strating server
+ [2024-11-08 20:35:48] INFO : SERVER LISTENING ON PORT : 8080
+ [2024-11-08 20:49:38] INFO : SIGNING YOU UPPP 
+ [2024-11-08 20:49:39] ERROR : Creating User: table Users has no column named updated_at
+ [2024-11-08 20:51:49] INFO : SIGNING YOU UPPP 
+ [2024-11-08 20:51:50] ERROR : Creating User: no such function: gen_random_uuid
+ [2024-11-08 21:10:54] INFO : SIGNING YOU UPPP 
