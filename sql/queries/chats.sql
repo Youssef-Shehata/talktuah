@@ -1,9 +1,8 @@
 
 
 -- name: NewChat :one
-INSERT INTO Chats(id,creation_date)
+INSERT INTO Chats(creation_date)
 VALUES (
-    gen_random_uuid(),
     NOW()
 )
 RETURNING *;

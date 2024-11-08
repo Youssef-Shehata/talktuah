@@ -1,10 +1,7 @@
 -- name: CreateUser :one
-insert into Users (id, created_at, updated_at, email, password , username)
+insert into Users ( created_at,   username , password)
 values (
-    gen_random_uuid(),
-    now(),
-    now(),
-    ?,
+    CURRENT_TIMESTAMP,
     ?,
     ?
 )

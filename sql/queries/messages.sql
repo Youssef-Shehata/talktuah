@@ -1,9 +1,8 @@
 
 -- name: NewMessage :one
-INSERT INTO Messages(id,sender_id,chat_id , content, sent_at)
+INSERT INTO Messages(sender_id,chat_id , content, sent_at)
 
 VALUES (
-    gen_random_uuid(),
     ?,
     ?,
     ?,
