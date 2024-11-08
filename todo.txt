@@ -1,0 +1,31 @@
+Database Schema
+User Management
+
+Users : user_ID, username, hashed password, created_at.
+
+Chats  :chat_ID, Creation_date .
+
+Chat_Members : chat_ID, user_ID, join_date.
+
+Messages_Table: message ID, sender ID, chat_id ,message content, sent_at.
+
+
+
+
+redis Cache recent messages 20 messages of a chat room
+cache user sessions ??
+cache invalidation 
+
+
+
+auth with jwt
+hash passs
+
+Use SSL/TLS 
+encrypt all messages 
+
+rate limiting 
+loadbalancing 
+
+?? maybe database replication and failover mechanisms
+
