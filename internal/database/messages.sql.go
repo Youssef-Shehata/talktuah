@@ -7,8 +7,7 @@ package database
 
 import (
 	"context"
-
-	"github.com/google/uuid"
+	"database/sql"
 )
 
 const deleteMessage = `-- name: DeleteMessage :exec
@@ -19,8 +18,8 @@ DELETE from  Messages where chat_id = ? and id = ?
 `
 
 type DeleteMessageParams struct {
-	ChatID interface{}
-	ID     uuid.UUID
+	ChatID sql.NullInt64
+	ID     int64
 }
 
 func (q *Queries) DeleteMessage(ctx context.Context, arg DeleteMessageParams) error {
@@ -32,7 +31,7 @@ const getMessageId = `-- name: GetMessageId :one
 select id, sender_id, chat_id, content, sent_at from Messages where id = ? order by sent_at desc
 `
 
-func (q *Queries) GetMessageId(ctx context.Context, id uuid.UUID) (Message, error) {
+func (q *Queries) GetMessageId(ctx context.Context, id int64) (Message, error) {
 	row := q.db.QueryRowContext(ctx, getMessageId, id)
 	var i Message
 	err := row.Scan(
@@ -81,10 +80,9 @@ func (q *Queries) GetMessagesByChatId(ctx context.Context, senderID interface{})
 }
 
 const newMessage = `-- name: NewMessage :one
-INSERT INTO Messages(id,sender_id,chat_id , content, sent_at)
+INSERT INTO Messages(sender_id,chat_id , content, sent_at)
 
 VALUES (
-    gen_random_uuid(),
     ?,
     ?,
     ?,
@@ -96,7 +94,7 @@ RETURNING id, sender_id, chat_id, content, sent_at
 
 type NewMessageParams struct {
 	SenderID interface{}
-	ChatID   interface{}
+	ChatID   sql.NullInt64
 	Content  string
 }
 

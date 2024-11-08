@@ -1,5 +1,3 @@
-Database Schema
-User Management
 
 Users : user_ID, username, hashed password, created_at.
 
@@ -11,21 +9,26 @@ Messages_Table: message ID, sender ID, chat_id ,message content, sent_at.
 
 
 
+4 . socket connection for each user , messages end-to-end encrypted 
 
-redis Cache recent messages 20 messages of a chat room
-cache user sessions ??
-cache invalidation 
+2 . db replicas ? 2 nodes 1 reads 1 writes ? 
+
+USERS AND CHATS IN SQLITE 
+MESSAGES IN CASANDRA 
+
+Implement Redis to cache latest 20 messages, manage user sessions, 
+and support real-time features with pub/sub.
+
+Ensure all communication is encrypted using SSL/TLS.
+encrypt messages in db 
+
+add rate limiting 
+when using a load balancer make sure you use and ip hashing algorithm 
+since users need ot connect to the same server for the scokets to work 
 
 
 
-auth with jwt
-hash passs
 
-Use SSL/TLS 
-encrypt all messages 
 
-rate limiting 
-loadbalancing 
 
-?? maybe database replication and failover mechanisms
 

@@ -5,34 +5,32 @@
 package database
 
 import (
+	"database/sql"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Chat struct {
-	ID           uuid.UUID
+	ID           int64
 	CreationDate time.Time
 }
 
 type ChatMember struct {
-	ChatID   interface{}
-	UserID   interface{}
+	ChatID   sql.NullInt64
+	UserID   sql.NullInt64
 	JoinDate time.Time
 }
 
 type Message struct {
-	ID       uuid.UUID
+	ID       int64
 	SenderID interface{}
-	ChatID   interface{}
+	ChatID   sql.NullInt64
 	Content  string
 	SentAt   time.Time
 }
 
 type User struct {
-	ID        uuid.UUID
+	ID        int64
 	CreatedAt time.Time
-	Email     string
 	Password  string
 	Username  string
 }

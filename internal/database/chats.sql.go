@@ -8,8 +8,6 @@ package database
 import (
 	"context"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 const deleteChat = `-- name: DeleteChat :exec
@@ -19,7 +17,7 @@ const deleteChat = `-- name: DeleteChat :exec
 DELETE from  Chats where id = ?
 `
 
-func (q *Queries) DeleteChat(ctx context.Context, id uuid.UUID) error {
+func (q *Queries) DeleteChat(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteChat, id)
 	return err
 }
@@ -28,7 +26,7 @@ const getChatCreationDate = `-- name: GetChatCreationDate :one
 select creation_date from Chats where id = ?
 `
 
-func (q *Queries) GetChatCreationDate(ctx context.Context, id uuid.UUID) (time.Time, error) {
+func (q *Queries) GetChatCreationDate(ctx context.Context, id int64) (time.Time, error) {
 	row := q.db.QueryRowContext(ctx, getChatCreationDate, id)
 	var creation_date time.Time
 	err := row.Scan(&creation_date)
@@ -63,9 +61,8 @@ func (q *Queries) GetChats(ctx context.Context) ([]Chat, error) {
 }
 
 const newChat = `-- name: NewChat :one
-INSERT INTO Chats(id,creation_date)
+INSERT INTO Chats(creation_date)
 VALUES (
-    gen_random_uuid(),
     NOW()
 )
 RETURNING id, creation_date

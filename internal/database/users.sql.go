@@ -7,36 +7,29 @@ package database
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
 
 const createUser = `-- name: CreateUser :one
-insert into Users (id, created_at, updated_at, email, password , username)
+insert into Users ( created_at,   username , password)
 values (
-    gen_random_uuid(),
-    now(),
-    now(),
-    ?,
+    CURRENT_TIMESTAMP,
     ?,
     ?
 )
-returning id, created_at, email, password, username
+returning id, created_at, password, username
 `
 
 type CreateUserParams struct {
-	Email    string
-	Password string
 	Username string
+	Password string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser, arg.Email, arg.Password, arg.Username)
+	row := q.db.QueryRowContext(ctx, createUser, arg.Username, arg.Password)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
-		&i.Email,
 		&i.Password,
 		&i.Username,
 	)
@@ -44,17 +37,16 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, created_at, email, password, username FROM Users 
+SELECT id, created_at, password, username FROM Users 
 WHERE id = ?
 `
 
-func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
+func (q *Queries) GetUserById(ctx context.Context, id int64) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUserById, id)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
-		&i.Email,
 		&i.Password,
 		&i.Username,
 	)
@@ -62,7 +54,7 @@ func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
 }
 
 const getUserByUsername = `-- name: GetUserByUsername :one
-SELECT id, created_at, email, password, username from Users where username= ?
+SELECT id, created_at, password, username from Users where username= ?
 `
 
 func (q *Queries) GetUserByUsername(ctx context.Context, username string) (User, error) {
@@ -71,7 +63,6 @@ func (q *Queries) GetUserByUsername(ctx context.Context, username string) (User,
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
-		&i.Email,
 		&i.Password,
 		&i.Username,
 	)

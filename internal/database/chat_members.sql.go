@@ -7,13 +7,14 @@ package database
 
 import (
 	"context"
+	"database/sql"
 )
 
 const getChatMembers = `-- name: GetChatMembers :many
 select chat_id, user_id, join_date from ChatMembers where chat_id = ? order by join_date desc
 `
 
-func (q *Queries) GetChatMembers(ctx context.Context, chatID interface{}) ([]ChatMember, error) {
+func (q *Queries) GetChatMembers(ctx context.Context, chatID sql.NullInt64) ([]ChatMember, error) {
 	rows, err := q.db.QueryContext(ctx, getChatMembers, chatID)
 	if err != nil {
 		return nil, err
@@ -48,8 +49,8 @@ RETURNING chat_id, user_id, join_date
 `
 
 type NewMemberParams struct {
-	ChatID interface{}
-	UserID interface{}
+	ChatID sql.NullInt64
+	UserID sql.NullInt64
 }
 
 func (q *Queries) NewMember(ctx context.Context, arg NewMemberParams) (ChatMember, error) {
